@@ -1,0 +1,13 @@
+$button-color: rgba(0, 0, 0, 0.2);
+
+.my-button {
+    padding: 8px 12px;
+    border: 2px solid $button-color;
+    border-radius: 3px;
+    color: $button-color;
+    font-weight: bold;
+
+    &.active {
+        background: yellowgreen;
+    }
+}
