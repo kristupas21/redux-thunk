@@ -1,52 +1,47 @@
 import React from 'react';
-import './app.scss';
-import {storeData, displayLoader, getDataAsync} from '../actions';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-// import loader from 'https://cdn.dribbble.com/users/108390/screenshots/2882839/spinner-loop.gif';
+import styled, {keyframes} from 'styled-components';
 
-class App extends React.Component {
+const mixinFlex = (justify='center', align='center') => {
+    return `
+        display: flex;
+        justify-content: ${justify};
+        align-items: ${align};
+    `;
+}
+
+const appear = keyframes`
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+`;
+
+const Wrapper = styled.div`
+    ${mixinFlex(arguments.justify = 'flex-end')};
+    background: ${props => props.primary ? 'palevioletred' : 'papayawhip'};
+    height: 150px;
+    width: 100%;
+`
     
-    componentDidMount() {
-        this.props.getDataAsync('https://jsonplaceholder.typicode.com/photos');
+
+const Title = styled.h1`
+    animation: ${appear} 1s linear forwards;
+    color: ${props => !props.primary ? 'palevioletred' : 'papayawhip'};
+    &:hover {
+        color: white;
     }
+`;
 
-    render() {
-        const { data, loaderOn } = this.props;
+const App = ({primary}) => {
+    
+    return (
+        <Wrapper primary={primary}>
+            <Title primary={primary}>
+                Hello world
+            </Title>
+        </Wrapper>
+    );
+};
 
-        return (
-            <div>
-                { loaderOn 
-                    ? <img src={'https://cdn.dribbble.com/users/108390/screenshots/2882839/spinner-loop.gif'} alt='loader' />
-                    :  data && data.map((obj, i) => {
-                        return (
-                            <div key={i}>
-                                <p>{obj.id}</p>
-                                <p>{obj.title}</p>
-                                <img src={obj.thumbnailUrl} alt={obj.title}/>
-                            </div>
-                        );
-                    }) 
-                }
-               
-            </div>
-        );
-    }
-}
-
-function mapStateToProps(state) {
-    return {
-        data: state.data,
-        loaderOn: state.loader
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        storeData,
-        displayLoader,
-        getDataAsync
-    }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
